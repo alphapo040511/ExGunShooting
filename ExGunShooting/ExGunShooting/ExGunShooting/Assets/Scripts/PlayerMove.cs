@@ -6,12 +6,13 @@ using UnityEngine.UIElements;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 5f;
-    public float force = 320f;
+    public float speed = 3f;
+    public float force = 400f;
     public Rigidbody rb;
     public GameObject playerCamera;
     private float yRotate;
-    public int jumpCount;
+    public float dash = 1f;
+    private bool isJumping = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,9 +26,18 @@ public class PlayerMove : MonoBehaviour
             
         transform.rotation = Quaternion.Euler(0 , playerCamera.transform.eulerAngles.y, 0);
 
+        if(Input.GetKey(KeyCode.LeftShift) && isJumping == false)
+        {
+            dash = 2;
+        }
+        if(Input.GetKeyUp(KeyCode.LeftShift) && isJumping == false)
+        {
+            dash = 1;
+        }
+
         if (Input.GetKey(KeyCode.W))
         {
-            gameObject.transform.Translate(new Vector3(0, 0, speed * Time.deltaTime));
+            gameObject.transform.Translate(new Vector3(0, 0, speed * Time.deltaTime * dash));
         }
 
 
@@ -48,18 +58,26 @@ public class PlayerMove : MonoBehaviour
             gameObject.transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0));
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && jumpCount == 1)
+        if(Input.GetKeyDown(KeyCode.Space) && isJumping == false)
         {
+            rb.velocity = Vector3.zero;
             rb.AddForce(Vector3.up * 100f * force * Time.deltaTime);
-            jumpCount -= 1;
+            isJumping = true;
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-            if (collision.gameObject.CompareTag("Ground") && jumpCount == 0)
+            if (collision.gameObject.CompareTag("Ground") )
         {
-            jumpCount += 1;
+            isJumping = false;
+
+            if(Input.GetKey(KeyCode.LeftShift))
+            { }
+            else
+            {
+                dash = 1;
+            }
         }
 
     }
