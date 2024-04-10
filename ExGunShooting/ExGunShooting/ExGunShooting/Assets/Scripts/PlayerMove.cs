@@ -23,7 +23,8 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            
+        
+
         transform.rotation = Quaternion.Euler(0 , playerCamera.transform.eulerAngles.y, 0);
 
         if(Input.GetKey(KeyCode.LeftShift) && isJumping == false)

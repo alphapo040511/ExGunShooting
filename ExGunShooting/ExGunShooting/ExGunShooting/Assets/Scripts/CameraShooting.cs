@@ -45,7 +45,7 @@ public class CameraShooting : MonoBehaviour
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
 
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
