@@ -6,15 +6,19 @@ TagManager:
   tags:
   - Enemy
   - Ground
+  - Explosion
+  - Grenade
+  - HitCheck
+  - Wall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Character
   - Water
   - UI
-  - 
-  - 
+  - Weapon
+  - Field
   - 
   - 
   - 
