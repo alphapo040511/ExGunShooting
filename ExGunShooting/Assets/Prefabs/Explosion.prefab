@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   work: 1
   grenade: {fileID: 5218965377979449664, guid: afa03cb3189af4f5e8dc4dea86be3a8a, type: 3}
+  boom: {fileID: 0}
 --- !u!135 &809599049812476806
 SphereCollider:
   m_ObjectHideFlags: 0

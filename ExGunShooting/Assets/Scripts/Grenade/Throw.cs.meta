@@ -3,7 +3,11 @@ guid: 83f72fa1ed61d4500ad61ec860090f10
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - hand: {instanceID: 0}
+  - rb: {instanceID: 0}
+  - explosionPrefab: {instanceID: 0}
+  - explosionScript: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

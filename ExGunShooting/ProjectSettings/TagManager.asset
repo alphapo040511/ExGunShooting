@@ -9,7 +9,7 @@ TagManager:
   - Explosion
   - Grenade
   - HitCheck
-  - Wall
+  - Field
   layers:
   - Default
   - TransparentFX

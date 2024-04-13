@@ -8,12 +8,13 @@ public class GrenadeExplosion : MonoBehaviour
     public bool work = false;
     public GameObject grenade;
     private bool damage = true;
+   
 
     // Start is called before the first frame update
     void Start()
     {
         work = false;
-        grenade = GameObject.FindWithTag("Grenade");
+        grenade = GameObject.FindGameObjectWithTag("Grenade");
         gameObject.GetComponent<SphereCollider>().enabled = false;
     }
 
@@ -27,38 +28,53 @@ public class GrenadeExplosion : MonoBehaviour
             explosionTimer -= Time.deltaTime;
         }
 
-        if (explosionTimer <= 0)
+        if (explosionTimer <= 0 && work == true)
         {
             gameObject.GetComponent<SphereCollider>().enabled = true;
+            work = false;
         }
     }
 
-    private void OnTriggerStay(Collider collider)
+    private void OnTriggerEnter(Collider collider)
     {
+        RaycastHit hit;
         if (collider.gameObject.CompareTag("HitCheck"))
         {
             transform.LookAt(new Vector3(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z));
 
-            Debug.DrawRay(transform.position, transform.forward * 10f, Color.red);
-
-            if (Physics.Raycast(transform.position, Vector3.forward, 50f, 1 << LayerMask.NameToLayer("Field")))
+            if (Physics.Raycast(transform.position, transform.forward, out hit, Vector3.Distance(collider.transform.position , transform.position), 1 << LayerMask.NameToLayer("Field")))
             {
-                damage = true;
-                Debug.Log("발견");
-
-            
-                if (damage == true)
+                Debug.DrawRay(transform.position, transform.forward * Vector3.Distance(collider.transform.position, transform.position), Color.red);
+                if (hit.transform.tag == "Field")
                 {
-                    Debug.Log("피격");
-                    //collider.GetComponent<PlayerHp>().HitDamage();
+                    damage = false;
+                    Debug.Log("방해물 발견");
                 }
             }
-                
+            else
+            {
+                damage = true;
+                Debug.Log("방해물 없음");
+            }
+
+            if (damage == true)
+            {
+                Debug.Log("피격");
+                collider.GetComponent<PlayerHp>().HitDamage();
+            }
+
         }
+        GrenadeDestroy();
     }
 
     public void TurnOn()
     {
         work = true;
+    }
+
+    private void GrenadeDestroy()
+    {
+        Destroy(grenade);
+        Destroy(gameObject);
     }
 }

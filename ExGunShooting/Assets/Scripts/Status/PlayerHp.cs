@@ -15,15 +15,11 @@ public class PlayerHp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Hp == 0)
-        {
-            Debug.Log("Die");
-        }
+        
     }
 
     public void HitDamage()
     {
         Hp -= 5;
-        Debug.Log(Hp);
     }
 }
