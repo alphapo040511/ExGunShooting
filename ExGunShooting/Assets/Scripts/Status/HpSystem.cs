@@ -6,6 +6,8 @@ public class HpSystem : MonoBehaviour
 {
     public float curHealth;
     public float maxHealth;
+
+    public int hp = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,4 +20,10 @@ public class HpSystem : MonoBehaviour
     {
         
     }
+
+    public void HitDamage()
+    {
+        hp -= 1;
+    }
 }
+

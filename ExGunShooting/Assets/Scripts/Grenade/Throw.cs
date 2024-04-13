@@ -21,6 +21,7 @@ public class Throw : MonoBehaviour
         GameObject temp = Instantiate(explosionPrefab);
         temp.transform.position = transform.position;
         explosionScript = GameObject.FindGameObjectWithTag("Explosion");
+        Invoke("TrunCollider", 0.2f);
     }
 
     // Update is called once per frame
@@ -54,8 +55,13 @@ public class Throw : MonoBehaviour
     public void ThrowAction()
     {
         gameObject.transform.SetParent(null);
-        rb.velocity = Vector3.zero;
-        rb.AddRelativeForce(Vector3.forward * 400f * throwSpeed * Time.deltaTime);
-        rb.AddRelativeForce(Vector3.up * 250f * throwSpeed * Time.deltaTime);
+        //rb.velocity = Vector3.zero;
+        rb.AddForce(transform.forward * 400f * throwSpeed * Time.deltaTime);
+        rb.AddForce(transform.up * 200f * throwSpeed * Time.deltaTime);
+    }
+
+    private void TrunCollider()
+    {
+        gameObject.GetComponent<SphereCollider>().enabled = true;
     }
 }

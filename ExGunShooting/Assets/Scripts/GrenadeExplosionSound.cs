@@ -34,7 +34,7 @@ public class GrenadeExplosionSound : MonoBehaviour
             gameObject.transform.SetParent(null);
             boom.Play();
         }
-        Destroy(this.gameObject, boom.clip.length);
+        Destroy(this.gameObject,1);
         yield break;
     }
 }

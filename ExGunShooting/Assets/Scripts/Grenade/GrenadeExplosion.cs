@@ -38,7 +38,7 @@ public class GrenadeExplosion : MonoBehaviour
     private void OnTriggerEnter(Collider collider)
     {
         RaycastHit hit;
-        if (collider.gameObject.CompareTag("HitCheck"))
+        if (collider.gameObject.CompareTag("Enemy") || collider.gameObject.CompareTag("Player"))
         {
             transform.LookAt(new Vector3(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z));
 
@@ -57,12 +57,17 @@ public class GrenadeExplosion : MonoBehaviour
                 Debug.Log("방해물 없음");
             }
 
-            if (damage == true)
+            if (damage == true && collider.gameObject.CompareTag("Enemy"))
             {
                 Debug.Log("피격");
-                collider.GetComponent<PlayerHp>().HitDamage();
+                collider.GetComponent<EnemyNormal>().Hp -= 5;
             }
 
+            if (damage == true && collider.gameObject.CompareTag("Player"))
+            {
+                Debug.Log("피격");
+                collider.GetComponent<HpSystem>().hp -= 5;
+            }
         }
         GrenadeDestroy();
     }
