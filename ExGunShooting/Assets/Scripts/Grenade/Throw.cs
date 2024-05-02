@@ -10,6 +10,7 @@ public class Throw : MonoBehaviour
     public float throwSpeed = 200f;
     public GameObject explosionPrefab;
     public GameObject explosionScript;
+    public bool cancel;
 
     // Start is called before the first frame update
     void Start()
@@ -18,10 +19,10 @@ public class Throw : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         GetComponent<Rigidbody>().isKinematic = true;
         transform.position = new Vector3(hand.transform.position.x, hand.transform.position.y, hand.transform.position.z);
-        GameObject temp = Instantiate(explosionPrefab);
-        temp.transform.position = transform.position;
+        //GameObject temp = Instantiate(explosionPrefab);
+        //temp.transform.position = transform.position;
         explosionScript = GameObject.FindGameObjectWithTag("Explosion");
-        Invoke("TrunCollider", 0.2f);
+        Invoke("TurnCollider", 0.2f);
     }
 
     // Update is called once per frame
@@ -34,11 +35,17 @@ public class Throw : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && throwing == false)
         {
+            cancel = false;
             transform.position = new Vector3(transform.position.x, hand.transform.position.y + 0.1f , transform.position.z);
         }
 
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            transform.position = new Vector3(transform.position.x, hand.transform.position.y, transform.position.z);
+            cancel = true;
+        }
 
-        if(Input.GetMouseButtonUp(0) && throwing == false)
+        if (Input.GetMouseButtonUp(0) && throwing == false && cancel == false)
         {
             GetComponent<Rigidbody>().isKinematic = false;
             
@@ -60,7 +67,7 @@ public class Throw : MonoBehaviour
         rb.AddForce(transform.up * 200f * throwSpeed * Time.deltaTime);
     }
 
-    private void TrunCollider()
+    private void TurnCollider()
     {
         gameObject.GetComponent<SphereCollider>().enabled = true;
     }

@@ -2,6 +2,8 @@ using Unity.PlasticSCM.Editor.UI;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using System.Collections;
 
 public class CameraShooting : MonoBehaviour
 {
@@ -12,24 +14,29 @@ public class CameraShooting : MonoBehaviour
     public float gunForce = 20.0f;
     public float coolDown;
     public float coolTime;
-    private int ammo;
+    public int ammo;
     public Text ammoUI = null;
     public Text reloadUI = null;
     GameObject obj;
     private float fireCooltime = 0;
     private bool fire = false;
 
-    private bool reloading = false;
+    public bool reloading = false;
     public bool fullAuto = true;
     public int reBound = 0;
+
+    private bool reboundRecover = false;
+    public Vector3 recoverForce = new Vector3(0, 0, 0);
+    public float recoverSpeed = 5;
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.rotation = Quaternion.Euler(0, 0, 0);
+        //transform.rotation = Quaternion.Euler(0, 0, 0);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        
 
         coolDown = 0.0f;
         coolTime = 0.08f;
@@ -42,7 +49,7 @@ public class CameraShooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
+        //transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
 
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -57,7 +64,7 @@ public class CameraShooting : MonoBehaviour
         yRotate = transform.eulerAngles.y + yRotateMove;
         xRotate = transform.eulerAngles.x + xRotateMove;
 
-        if (fire == false)
+        //if (fire == false)
         {
             transform.rotation = Quaternion.Euler(xRotate, yRotate, 0);
         }
@@ -107,7 +114,7 @@ public class CameraShooting : MonoBehaviour
         {
             Invoke("Reload", 1.5f);
             reloading = true;
-            reloadUI.text = "Reload".ToString();
+            reloadUI.enabled = true;
         }
         
 
@@ -116,17 +123,10 @@ public class CameraShooting : MonoBehaviour
 
     private void Reload()
     {
-        reloadUI.text = "".ToString();
+        reloadUI.enabled = false;
         ammo = 30;
         AmmoUI();
         reloading = false;
-    }
-
-    private void AmmoUI()
-    {
-        string ammoText = ammo + "/30";
-        //string ammoText = $"{ammo}/30";
-        ammoUI.text = ammoText;
     }
 
     private void HitCheck()
@@ -159,15 +159,15 @@ public class CameraShooting : MonoBehaviour
         ammo -= 1;
         AmmoUI();
 
-        for (fireCooltime = 0; fireCooltime <= 1f;)
+        if (reboundRecover == true)
         {
-            float RandonNumber = Random.Range(0.02f + reBound * reBound / 30000, 0.06f + reBound * reBound / 30000);
-            xRotate = xRotate - RandonNumber * gunForce * Time.deltaTime;
-            RandonNumber = Random.Range(-0.1f + reBound * reBound / 60000, 0.1f + reBound * reBound / 60000);
-            yRotate = yRotate - RandonNumber * gunForce * Time.deltaTime;
-            fireCooltime += Time.deltaTime;
+            reboundRecover = false;
+            StopCoroutine(ReBound());
+
         }
 
+        StartCoroutine(ReBound());
+        reboundRecover = true;
         fire = true;
 
         reBound += 1;
@@ -184,17 +184,49 @@ public class CameraShooting : MonoBehaviour
         ammo -= 1;
         AmmoUI();
 
-            for (fireCooltime = 0; fireCooltime <= 5f;)
+        //transform.DOShakeRotation(1, new Vector3(1, 0, 0));
+        
+        if(reboundRecover == true)
         {
-            float RandonNumber = Random.Range(0.02f, 0.06f);
-            xRotate = xRotate - RandonNumber * gunForce * Time.deltaTime;
-            RandonNumber = Random.Range(-0.2f, 0.2f);
-            yRotate = yRotate - RandonNumber * gunForce * Time.deltaTime;
-            fireCooltime += Time.deltaTime;
-            Debug.Log(fireCooltime);
+            reboundRecover = false;
+            StopCoroutine(ReBound());
+
         }
 
+        StartCoroutine(ReBound());
+        reboundRecover = true;
             fire = true;
+    }
+
+
+    private void AmmoUI()
+    {
+        string ammoText = ammo + "/30";
+        //string ammoText = $"{ammo}/30";
+        ammoUI.text = ammoText;
+    }
+
+    private IEnumerator ReBound()
+    {
+        float checkTime = 0.04f;
+            while (checkTime >= 0)
+        {
+            float RandonNumber = Random.Range(0.5f, 2f);
+            xRotate = xRotate - RandonNumber * gunForce * Time.deltaTime;
+            RandonNumber = Random.Range(-0.5f, 0.5f);
+            yRotate = yRotate - RandonNumber * gunForce * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(xRotate, yRotate, 0);
+            checkTime -= Time.deltaTime;
+            yield return null;
         }
-    
+        checkTime = 0.04f;
+        while (checkTime >= 0)
+        {
+            float RandonNumber = Random.Range(-0.3f, -1.7f);
+            xRotate = xRotate - RandonNumber * gunForce * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(xRotate, yRotate, 0);
+            checkTime -= Time.deltaTime;
+            yield return null;
+        }
+    }
 }

@@ -35,6 +35,16 @@ public class CameraFollow : MonoBehaviour
         yRotate = transform.eulerAngles.y + yRotateMove;
         xRotate = transform.eulerAngles.x + xRotateMove;
 
+        if(xRotate >= 60 && xRotate <= 180)
+        {
+            xRotate = 60;
+        }
+        else if (xRotate <= 300 && xRotate >= 180)
+        {
+            xRotate = 300;
+        }
+
         transform.rotation = Quaternion.Euler(xRotate, yRotate, 0);
+
     }
 }
